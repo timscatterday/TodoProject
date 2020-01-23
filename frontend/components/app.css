@@ -1,0 +1,22 @@
+#root {
+    display: flex;
+    justify-content: center;
+}
+
+.App{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 50%;
+}
+
+.Form {
+    display: flex;
+    flex-direction: column;
+}
+
+.label{
+    padding-bottom: 42px;
+    display: flex;
+    flex-direction: column;
+}

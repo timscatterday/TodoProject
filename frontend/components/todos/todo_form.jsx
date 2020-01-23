@@ -38,8 +38,8 @@ class TodoForm extends React.Component {
     render(){
         return(
             <div>
-                <form onSubmit={this.handleSubmit}>
-                    <label>
+                <form onSubmit={this.handleSubmit} className='Form'>
+                    <label className='label'>
                         Title:
                         <input 
                             className='input'
@@ -49,7 +49,7 @@ class TodoForm extends React.Component {
                             onChange={this.update('title')}
                         />
                     </label>
-                    <label>
+                    <label className='label'>
                         Body:
                         <textarea
                             className='input'
@@ -61,7 +61,7 @@ class TodoForm extends React.Component {
                             onChange={this.update('body')}
                         />
                     </label>
-                    <label>
+                    <label className='label'>
                         Tag:
                         <input
                             className='input'

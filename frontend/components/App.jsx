@@ -1,8 +1,9 @@
 import React from 'react';
 import TodoListContainer from '../components/todos/todo_list_container';
+import './app.css';
 
 const App = () => (
-    <div>
+    <div className='App'>
         <h1>TODO App</h1>
         <TodoListContainer />
     </div>
