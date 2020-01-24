@@ -8,31 +8,28 @@ class TodoForm extends React.Component {
         this.state = {
             title: "",
             body: "",
-            newTag: "",
-            tags: []
+            done: false
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.addTag = this.addTag.bind(this);
     };
 
     update(property){
         return e => this.setState({[property]: e.target.value})
     };
 
-    addTag(e){
-        this.setState({
-           tags: [...this.state.tags, this.state.newTag],
-           newTag: ""
-        });
-    };
 
     handleSubmit(e){
         e.preventDefault();
 
-        const {title, body} = this.state;
+        const todo = Object.assign({}, this.state, {id: uniqueId()});
 
-        this.props.receiveTodo({id: uniqueId(), title: title, body: body});
+        this.props.receiveTodo(todo);
+
+        this.setState({
+            title: "",
+            body: ""
+        });
     };
 
     render(){
@@ -60,19 +57,6 @@ class TodoForm extends React.Component {
                             placeholder="2% milk"
                             onChange={this.update('body')}
                         />
-                    </label>
-                    <label className='label'>
-                        Tag:
-                        <input
-                            className='input'
-                            ref='body'
-                            value={this.state.newTag}
-                            placeholder="Enter a new tag"
-                            onChange={this.update('newTag')}
-                        />
-                        <button type="button" className="button" onClick={this.addTag}>
-                            Add Tag
-                        </button>
                     </label>
                     <button className="create-button">Create Todo!</button>
                 </form>

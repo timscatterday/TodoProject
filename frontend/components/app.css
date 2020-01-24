@@ -1,6 +1,11 @@
 #root {
     display: flex;
     justify-content: center;
+    background-color: #b2ebf2
+}
+
+.body{
+   background-color: #b2ebf2 
 }
 
 .App{
@@ -19,4 +24,21 @@
     padding-bottom: 42px;
     display: flex;
     flex-direction: column;
+}
+
+.title{
+    display: flex;
+    justify-content: center;
+    
+}
+
+.TodoItem{
+    background-color: white;
+    padding: 30px;
+    margin-bottom: 10px;
+    list-style-type: none;
+    margin-left: -42px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
 }

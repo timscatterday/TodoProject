@@ -146,7 +146,9 @@ __webpack_require__.r(__webpack_exports__);
 var App = function App() {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "App"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "TODO App"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_todos_todo_list_container__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+    className: "title"
+  }, "TODO App"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_todos_todo_list_container__WEBPACK_IMPORTED_MODULE_1__["default"], null));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (App);
@@ -226,14 +228,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_uniq__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/uniq */ "./frontend/util/uniq.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -269,11 +263,9 @@ function (_React$Component) {
     _this.state = {
       title: "",
       body: "",
-      newTag: "",
-      tags: []
+      done: false
     };
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
-    _this.addTag = _this.addTag.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -287,24 +279,16 @@ function (_React$Component) {
       };
     }
   }, {
-    key: "addTag",
-    value: function addTag(e) {
-      this.setState({
-        tags: [].concat(_toConsumableArray(this.state.tags), [this.state.newTag]),
-        newTag: ""
-      });
-    }
-  }, {
     key: "handleSubmit",
     value: function handleSubmit(e) {
       e.preventDefault();
-      var _this$state = this.state,
-          title = _this$state.title,
-          body = _this$state.body;
-      this.props.receiveTodo({
-        id: Object(_util_uniq__WEBPACK_IMPORTED_MODULE_1__["uniqueId"])(),
-        title: title,
-        body: body
+      var todo = Object.assign({}, this.state, {
+        id: Object(_util_uniq__WEBPACK_IMPORTED_MODULE_1__["uniqueId"])()
+      });
+      this.props.receiveTodo(todo);
+      this.setState({
+        title: "",
+        body: ""
       });
     }
   }, {
@@ -331,19 +315,7 @@ function (_React$Component) {
         value: this.state.body,
         placeholder: "2% milk",
         onChange: this.update('body')
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        className: "label"
-      }, "Tag:", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        className: "input",
-        ref: "body",
-        value: this.state.newTag,
-        placeholder: "Enter a new tag",
-        onChange: this.update('newTag')
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        type: "button",
-        className: "button",
-        onClick: this.addTag
-      }, "Add Tag")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "create-button"
       }, "Create Todo!")));
     }
@@ -410,15 +382,17 @@ function (_React$Component) {
           todos = _this$props.todos,
           receiveTodo = _this$props.receiveTodo,
           removeTodo = _this$props.removeTodo;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, todos.map(function (todo) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_todo_form__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        receiveTodo: receiveTodo
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, todos.map(function (todo) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_todo_list_item__WEBPACK_IMPORTED_MODULE_1__["default"], {
           id: todo.id,
           title: todo.title,
-          removeTodo: removeTodo
+          receiveTodo: receiveTodo,
+          removeTodo: removeTodo,
+          todo: todo
         });
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_todo_form__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        receiveTodo: receiveTodo
-      }));
+      })));
     }
   }]);
 
@@ -462,19 +436,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     receiveTodo: function receiveTodo(todo) {
       return dispatch(Object(_actions_todo_actions__WEBPACK_IMPORTED_MODULE_1__["receiveTodo"])(todo));
     },
-    removeTodo: function (_removeTodo) {
-      function removeTodo(_x) {
-        return _removeTodo.apply(this, arguments);
-      }
-
-      removeTodo.toString = function () {
-        return _removeTodo.toString();
-      };
-
-      return removeTodo;
-    }(function (todo) {
-      return dispatch(removeTodo(todo));
-    })
+    removeTodo: function removeTodo(todo) {
+      return dispatch(Object(_actions_todo_actions__WEBPACK_IMPORTED_MODULE_1__["removeTodo"])(todo));
+    }
   };
 };
 
@@ -503,9 +467,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -519,20 +483,45 @@ function (_React$Component) {
   _inherits(ToDoListItem, _React$Component);
 
   function ToDoListItem(props) {
+    var _this;
+
     _classCallCheck(this, ToDoListItem);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(ToDoListItem).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ToDoListItem).call(this, props));
+    _this.toggleTodo = _this.toggleTodo.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(ToDoListItem, [{
+    key: "toggleTodo",
+    value: function toggleTodo(e) {
+      e.preventDefault();
+      var toggledTodo = Object.assign({}, this.props.todo, {
+        done: !this.props.todo.done
+      });
+      this.props.receiveTodo(toggledTodo);
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this$props = this.props,
           id = _this$props.id,
-          title = _this$props.title;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          removeTodo = _this$props.removeTodo,
+          todo = _this$props.todo,
+          receiveTodo = _this$props.receiveTodo;
+      var done = todo.done,
+          title = todo.title;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "TodoItem"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         key: id
-      }, title);
+      }, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.toggleTodo
+      }, done ? "Undo" : "Done"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: function onClick() {
+          return removeTodo(todo);
+        }
+      }, "Delete")));
     }
   }]);
 
@@ -599,23 +588,9 @@ __webpack_require__.r(__webpack_exports__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
-var initialState = {
-  1: {
-    id: 1,
-    title: "wash car",
-    body: "with soap",
-    done: false
-  },
-  2: {
-    id: 2,
-    title: "wash dog",
-    body: "with shampoo",
-    done: true
-  }
-};
 
 var todosReducer = function todosReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var action = arguments.length > 1 ? arguments[1] : undefined;
   Object.freeze(state);
   var nextState = {};
@@ -695,6 +670,7 @@ document.addEventListener("DOMContentLoaded", function () {
   window.allTodos = _reducers_selectors__WEBPACK_IMPORTED_MODULE_3__["allTodos"];
   window.receiveTodo = _actions_todo_actions__WEBPACK_IMPORTED_MODULE_5__["receiveTodo"];
   window.receiveTodos = _actions_todo_actions__WEBPACK_IMPORTED_MODULE_5__["receiveTodos"];
+  window.removeTodo = _actions_todo_actions__WEBPACK_IMPORTED_MODULE_5__["removeTodo"];
   var root = document.getElementById('root');
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_root__WEBPACK_IMPORTED_MODULE_2__["default"], {
     store: store
@@ -790,7 +766,7 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "#root {\n    display: flex;\n    justify-content: center;\n}\n\n.App{\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n    width: 50%;\n}\n\n.Form {\n    display: flex;\n    flex-direction: column;\n}\n\n.label{\n    padding-bottom: 42px;\n    display: flex;\n    flex-direction: column;\n}", ""]);
+exports.push([module.i, "#root {\n    display: flex;\n    justify-content: center;\n    background-color: #b2ebf2\n}\n\n.body{\n   background-color: #b2ebf2 \n}\n\n.App{\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n    width: 50%;\n}\n\n.Form {\n    display: flex;\n    flex-direction: column;\n}\n\n.label{\n    padding-bottom: 42px;\n    display: flex;\n    flex-direction: column;\n}\n\n.title{\n    display: flex;\n    justify-content: center;\n    \n}\n\n.TodoItem{\n    background-color: white;\n    padding: 30px;\n    margin-bottom: 10px;\n    list-style-type: none;\n    margin-left: -42px;\n    border-radius: 14px;\n    display: flex;\n    justify-content: space-between;\n}", ""]);
 // Exports
 module.exports = exports;
 
